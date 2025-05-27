@@ -1,127 +1,79 @@
 /* Sockomo Giraffe Growth Stage Webpage Custom Styles
    Complements Tailwind CSS with animations and special effects */
 
-/* Custom animations */
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
+/* Keyframe animations are now in Tailwind config. Retain those not easily configured in Tailwind or for overrides. */
 
-@keyframes fadeInUp {
+@keyframes fadeInUp { /* Used for fun facts, keep if not moving to Tailwind fully */
     from {
         opacity: 0;
-        transform: translateY(30px) scale(0.98);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-.animate-fadeInUp {
-    animation: fadeInUp 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-}
-
-
-@keyframes bounce {
-    0%, 20%, 53%, 80%, 100% {
-        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
-        transform: translate3d(0,0,0);
-    }
-    40%, 43% {
-        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
-        transform: translate3d(0, -8px, 0);
-    }
-    70% {
-        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
-        transform: translate3d(0, -4px, 0);
-    }
-    90% {
-        transform: translate3d(0,-1px,0);
+        transform: translateY(0);
     }
 }
 
-/* Giraffe image effects */
-.giraffe-image {
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+/* Enhanced Button hover/active effects */
+#findStageBtn, #tryAgainBtn {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s ease-out;
 }
-.giraffe-image:hover {
+
+#findStageBtn:hover {
+    /* Tailwind hover:bg-red-600 is primary for bg color */
+    box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4); /* Crimson (sockomo-red) glow */
     transform: scale(1.07);
 }
-.giraffe-image-enter {
-    animation: scaleUpZoomIn 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s both; /* Added delay */
-}
-@keyframes scaleUpZoomIn {
-    0% {
-        transform: scale(0.6);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+#findStageBtn:active {
+    transform: scale(0.98); /* Overrides potential Tailwind active scale if any */
+    box-shadow: 0 2px 10px rgba(220, 20, 60, 0.3);
 }
 
+#tryAgainBtn:hover {
+    /* Tailwind hover:bg-blue-600 is primary for bg color */
+    box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4); /* DodgerBlue (sockomo-blue) glow */
+    transform: scale(1.07);
+}
+#tryAgainBtn:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 10px rgba(30, 144, 255, 0.3);
+}
 
-/* Button hover effects enhancement */
-button {
-    transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother transition */
-}
-button:hover {
-    filter: brightness(1.1); /* Subtle brightness increase */
-}
-button:active {
-    transform: scale(0.95); /* Combined with Tailwind's active:scale-95 */
-    filter: brightness(0.9);
-}
 
 /* Input focus effects */
 input[type="number"]:focus {
-    box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.3); /* Sockomo Orange glow */
+    border-color: #FF8C00; /* sockomo-orange */
+    box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.3); /* sockomo-orange glow */
 }
 
-/* Loading spinner animation */
+/* Loading spinner animation (Tailwind's animate-spin is used, this is a fallback if needed elsewhere) */
 @keyframes spin {
     to {
         transform: rotate(360deg);
     }
 }
-.animate-spin {
-    animation: spin 1s linear infinite;
-}
+/* .animate-spin class from Tailwind is preferred */
 
-/* Fun facts container styling */
+
+/* Fun facts container styling for individual fact animation */
 #funFacts > div {
     opacity: 0; /* Initial state for animation */
-    animation: fadeInUpList 0.6s ease forwards;
-}
-#funFacts > div:nth-child(1) { animation-delay: 0.3s; }
-#funFacts > div:nth-child(2) { animation-delay: 0.45s; }
-#funFacts > div:nth-child(3) { animation-delay: 0.6s; }
-
-@keyframes fadeInUpList { /* Slightly different from main fadeInUp for variety */
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    animation: fadeInUp 0.5s ease-out forwards;
 }
 
-/* Responsive text adjustments */
+#funFacts > div:nth-child(1) { animation-delay: 0s; }
+#funFacts > div:nth-child(2) { animation-delay: 0.15s; }
+#funFacts > div:nth-child(3) { animation-delay: 0.3s; }
+
+
+/* Responsive text adjustments (mostly handled by Tailwind, but can add overrides) */
 @media (max-width: 640px) {
     .container {
-        padding-left: 1rem;
+        padding-left: 1rem; /* Tailwind sm:px-4 equivalent for container */
         padding-right: 1rem;
     }
-    h1.font-sockomo { /* More specific selector */
-        font-size: 2.1rem; 
-    }
-    h2.font-sockomo {
-        font-size: 1.6rem;
-    }
+    
+    /* Tailwind handles h1, h2 sizes with text-3xl, text-2xl etc. */
 }
 
 /* Smooth scrolling for the entire page */
@@ -132,46 +84,50 @@ html {
 /* Custom scrollbar for webkit browsers */
 ::-webkit-scrollbar {
     width: 10px;
+    height: 10px;
 }
+
 ::-webkit-scrollbar-track {
-    background: #fdf6e3; /* Lighter than sockomo-yellow */
+    background: #f1f1f1;
     border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb {
     background: #FF8C00; /* sockomo-orange */
     border-radius: 10px;
-    border: 2px solid #fdf6e3; /* Track color border */
+    border: 2px solid #f1f1f1; /* Creates a nice padding effect */
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: #e67e00; /* Darker orange */
 }
 
-/* Print styles (if users want to print their results) */
+/* Print styles */
 @media print {
-    .no-print, header, #inputSection button, #tryAgainBtn, #loadingSpinner, #measurementModal { /* Hide non-essential print elements */
+    header, #findStageBtn, #tryAgainBtn, #loadingSpinner, .no-print {
         display: none !important;
     }
-    body {
+    
+    body, .bg-gradient-to-br, #inputSection, #outputSection > div {
         background: white !important;
-        font-size: 12pt;
-    }
-    .bg-gradient-to-br, .bg-gradient-to-r, .bg-sockomo-yellow\/30, .bg-sockomo-yellow\/20 {
-        background: transparent !important;
-    }
-    .shadow-lg, .shadow-xl {
-        box-shadow: none !important;
-    }
-    #outputSection {
-        display: block !important; /* Ensure output section is visible */
-        border: 1px solid #ccc;
-    }
-    #giraffeImage {
-        max-height: 200px; /* Adjust image size for print */
-    }
-    .text-white { /* Ensure text on colored backgrounds is visible */
         color: black !important;
     }
-    .p-6, .p-8 { padding: 10px !important; }
+    
+    .shadow-lg, .shadow-md, .shadow-sm {
+        box-shadow: none !important;
+    }
+
+    #outputSection {
+        display: block !important; /* Ensure output is visible for printing */
+    }
+
+    .p-6, .p-8, .p-4 { /* Reduce padding for print */
+        padding: 10px !important;
+    }
+    .mb-8, .mb-6, .mb-4, .mb-3, .mb-2, .mb-1, .space-y-2, .space-y-3, .space-y-4, .space-y-6, .gap-6, .gap-8 {
+        margin-bottom: 8px !important; /* Reduce margins and spacing */
+        gap: 8px !important;
+    }
 }
 
 /* Accessibility improvements */
@@ -184,23 +140,12 @@ html {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+    /* Keep giraffe image visible without animation */
+    .animate-giraffe-appear {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
 }
 
-/* Focus visible for better keyboard navigation */
-.focus-visible:focus { /* Tailwind's default focus-visible is good, this is an example */
-    outline: 2px solid #1E90FF;
-    outline-offset: 2px;
-}
-
-/* Modal transition */
-#measurementModal.flex .modal-content {
-    transform: scale(1);
-    opacity: 1;
-}
-#measurementModal.hidden .modal-content {
-    transform: scale(0.95);
-    opacity: 0;
-}
-
-
-
+/* Focus visible for better keyboard navigation (Tailwind provides focus-visible utilities) */
+/* Example: .focus-visible\:ring-2 .focus-visible\:ring-sockomo-orange */

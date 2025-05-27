@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sockomo Growth Ruler - Find Your Giraffe Stage!</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -21,8 +21,28 @@
                         'sockomo-brown': '#A0522D'
                     },
                     fontFamily: {
-                        'sockomo': ['"Baloo 2"', 'cursive'],
-                        'clean': ['"Nunito"', 'sans-serif']
+                        'sockomo': ['Fredoka One', 'cursive'],
+                        'clean': ['Montserrat', 'sans-serif']
+                    },
+                    animation: {
+                        'giraffe-appear': 'giraffeAppearAnimation 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards',
+                        'click-bounce': 'clickBounceEffect 0.3s ease-in-out',
+                        'shake-error': 'shake 0.5s ease-in-out', // Re-added for error message
+                    },
+                    keyframes: {
+                        giraffeAppearAnimation: {
+                            'from': { transform: 'scale(0.8) rotate(-5deg)', opacity: '0' },
+                            'to': { transform: 'scale(1) rotate(0deg)', opacity: '1' },
+                        },
+                        clickBounceEffect: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(0.93)' },
+                        },
+                        shake: { // Re-added for error message
+                            '0%, 100%': { transform: 'translateX(0)' },
+                            '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-5px)' },
+                            '20%, 40%, 60%, 80%': { transform: 'translateX(5px)' },
+                        }
                     }
                 }
             }
@@ -30,15 +50,13 @@
     </script>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-gradient-to-br from-sockomo-yellow via-white to-sockomo-pink/30 min-h-screen font-clean">
+<body class="bg-gradient-to-br from-sockomo-yellow to-white min-h-screen font-clean">
     <!-- Header -->
-    <header class="bg-sockomo-orange text-white p-4 shadow-lg sticky top-0 z-40">
+    <header class="bg-sockomo-orange text-white p-4 shadow-lg">
         <div class="container mx-auto flex items-center justify-center">
             <div class="text-center">
-                <!-- MODIFIED: Replaced h1 text with an img tag for the logo -->
-                <!-- Please replace 'assets/images/girapaws-logo.png' with the path to your actual logo image -->
-                <img src="assets/logo.png" alt="SOCKOMO Logo" class="h-10 md:h-12 mx-auto mb-1"> 
-                <p class="font-clean text-sm md:text-base opacity-90">growing socks for growing feet</p>
+                <h1 class="font-sockomo text-3xl md:text-4xl font-bold tracking-wide">SOCKOMO</h1>
+                <p class="font-clean text-sm md:text-base mt-1 opacity-90">Growing socks for growing feet</p>
             </div>
         </div>
     </header>
@@ -47,68 +65,68 @@
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         
         <!-- Input Section -->
-        <div id="inputSection" class="bg-white rounded-xl shadow-xl p-6 md:p-8 border-2 border-sockomo-blue mb-8">
+        <div id="inputSection" class="bg-white rounded-xl shadow-lg p-6 md:p-8 border-2 border-sockomo-blue mb-8">
             <div class="text-center mb-6">
                 <h2 class="font-sockomo text-2xl md:text-3xl text-sockomo-orange font-bold mb-4">
                     🦒 Discover Your Giraffe Growth Stage! 🦒
                 </h2>
                 <p class="font-clean text-gray-700 text-lg mb-4">
-                    Use your GiraPaws ruler to measure your foot and find out which giraffe you're like!
+                    Use your Sockomo ruler to measure your foot and find out which giraffe you're like!
                 </p>
             </div>
 
-            <!-- Existing Measurement Instructions (can remain or be removed if modal is sufficient) -->
+            <!-- Instructions -->
             <div class="bg-sockomo-yellow/30 rounded-lg p-4 mb-6">
                 <h3 class="font-sockomo text-xl text-sockomo-blue font-bold mb-3 flex items-center">
-                    <span class="text-2xl mr-2">📏</span> How to Measure:
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-sockomo-red" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    How to Measure:
                 </h3>
-                <ul class="font-clean text-gray-700 space-y-2 text-sm">
+                <ul class="font-clean text-gray-700 space-y-2 pl-8">
                     <li class="flex items-start">
                         <span class="text-sockomo-red font-bold mr-2">1.</span>
-                        <span>Place your GiraPaws ruler on a flat floor.</span>
+                        <span>Place your Sockomo ruler on a flat surface.</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-sockomo-red font-bold mr-2">2.</span>
-                        <span>Stand with your heel at the 'Start' line.</span>
+                        <span>Stand with your heel at the 'Start' line of the ruler.</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-sockomo-red font-bold mr-2">3.</span>
-                        <span>Read the measurement at your longest toe in centimeters (cm).</span>
+                        <span>Note the measurement at your longest toe in centimeters (cm).</span>
                     </li>
                 </ul>
             </div>
 
             <!-- Input Field -->
             <div class="flex flex-col items-center space-y-4">
-                <div class="w-full max-w-md">
-                    <label for="footLength" class="block font-sockomo text-xl text-sockomo-blue font-bold mb-2 text-center">
+                <div class="w-full max-w-md text-center">
+                    <label for="footLength" class="block font-sockomo text-xl text-sockomo-blue font-bold mb-1">
                         Enter Foot Length (cm):
                     </label>
+                    <div class="flex items-center justify-center space-x-1.5 mb-3 text-sm text-gray-600 font-clean cursor-default" title="Use the measurement from your Sockomo ruler.">
+                        <img src="https://r2.flowith.net/files/o/1748053390105-Instruction_Icon_for_Childrens_Foot_Measuring_Ruler_index_0@1024x1024.png" alt="Ruler Icon" class="w-5 h-5">
+                        <span>How to measure?</span>
+                    </div>
                     <input 
                         type="number" 
                         id="footLength" 
                         placeholder="e.g., 15.5" 
                         step="0.1" 
-                        min="8" 
-                        max="25"
-                        class="w-full px-4 py-3 text-xl text-center border-2 border-sockomo-blue rounded-lg focus:outline-none focus:ring-2 focus:ring-sockomo-orange focus:border-sockomo-orange transition-all"
+                        min="8.9" 
+                        max="24.8"
+                        class="w-full px-4 py-3 text-xl text-center border-2 border-sockomo-blue rounded-lg focus:outline-none focus:border-sockomo-orange transition-colors duration-150"
                     >
-                     <!-- "How to Measure?" Link -->
-                    <div class="flex items-center justify-center space-x-1.5 mt-3 mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-sockomo-blue" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                        </svg>
-                        <button id="howToMeasureLink" class="text-sm text-sockomo-blue hover:underline font-clean focus:outline-none">How to measure?</button>
-                    </div>
                 </div>
                 
                 <button 
                     id="findStageBtn" 
-                    class="bg-sockomo-red hover:bg-red-700 text-white font-sockomo text-xl font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-200 active:scale-95 active:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+                    class="bg-sockomo-red hover:bg-red-600 text-white font-sockomo text-xl font-bold py-3 px-8 rounded-full shadow-lg"
                 >
                     🦒 Find My Giraffe Friend! 🦒
                 </button>
-                <img src="assets/logo2.png" alt="SOCKOMO Logo" class="h-10 md:h-12 mx-auto mb-1"> 
+
                 <!-- Error Message -->
                 <div id="errorMessage" class="hidden text-sockomo-red font-clean text-center bg-red-50 p-3 rounded-lg border border-red-200 w-full max-w-md">
                 </div>
@@ -117,7 +135,7 @@
 
         <!-- Output Section -->
         <div id="outputSection" class="hidden">
-            <div class="bg-white rounded-xl shadow-xl border-2 border-sockomo-blue overflow-hidden">
+            <div class="bg-white rounded-xl shadow-lg border-2 border-sockomo-blue overflow-hidden">
                 
                 <!-- Results Header -->
                 <div class="bg-gradient-to-r from-sockomo-orange to-sockomo-red text-white p-6 text-center">
@@ -130,16 +148,16 @@
                 </div>
 
                 <!-- Results Content -->
-                <div class="grid md:grid-cols-2 gap-6 md:gap-8 p-6 md:p-8">
+                <div class="grid md:grid-cols-2 gap-6 md:gap-8 p-6 md:p-8 items-center">
                     
                     <!-- Giraffe Image -->
-                    <div class="order-2 md:order-1 flex items-center justify-center">
-                        <div class="bg-gradient-to-br from-sockomo-yellow/20 to-sockomo-pink/20 rounded-xl p-4 h-full w-full">
+                    <div class="order-2 md:order-1 flex justify-center items-center">
+                        <div class="bg-gradient-to-br from-sockomo-yellow/20 to-sockomo-pink/20 rounded-xl p-4">
                             <img 
                                 id="giraffeImage" 
                                 src="" 
                                 alt="Giraffe Stage" 
-                                class="max-w-full max-h-80 object-contain rounded-lg shadow-md giraffe-image mx-auto"
+                                class="max-w-full h-auto max-h-80 md:max-h-96 object-contain rounded-lg"
                             >
                         </div>
                     </div>
@@ -164,11 +182,11 @@
                             </h3>
                             <div class="bg-sockomo-yellow/20 rounded-lg p-4 space-y-2">
                                 <div>
-                                    <span class="font-clean font-semibold text-sockomo-brown">Height: </span>
+                                    <span class="font-clean font-bold text-sockomo-brown">Height: </span>
                                     <span id="height" class="font-clean text-gray-700"></span>
                                 </div>
                                 <div>
-                                    <span class="font-clean font-semibold text-sockomo-brown">Weight: </span>
+                                    <span class="font-clean font-bold text-sockomo-brown">Weight: </span>
                                     <span id="weight" class="font-clean text-gray-700"></span>
                                 </div>
                             </div>
@@ -190,7 +208,7 @@
                 <div class="bg-sockomo-yellow/30 p-6 text-center">
                     <button 
                         id="tryAgainBtn" 
-                        class="bg-sockomo-blue hover:bg-blue-700 text-white font-sockomo text-lg font-bold py-3 px-6 rounded-full shadow-lg transform hover:scale-105 transition-all duration-200 active:scale-95 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                        class="bg-sockomo-blue hover:bg-blue-600 text-white font-sockomo text-lg font-bold py-3 px-6 rounded-full shadow-lg"
                     >
                         📏 Measure Again!
                     </button>
@@ -200,25 +218,12 @@
     </div>
 
     <!-- Loading Spinner -->
-    <div id="loadingSpinner" class="hidden fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+    <div id="loadingSpinner" class="hidden fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 backdrop-blur-sm">
         <div class="bg-white rounded-lg p-8 flex flex-col items-center shadow-2xl">
             <div class="animate-spin rounded-full h-12 w-12 border-4 border-sockomo-orange border-t-transparent mb-4"></div>
             <p class="font-sockomo text-lg text-sockomo-blue font-bold">Finding your giraffe friend...</p>
         </div>
     </div>
-
-    <!-- Measurement Instruction Modal -->
-    <div id="measurementModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[60] p-4 transition-opacity duration-300 ease-out">
-        <div class="bg-white p-5 sm:p-6 rounded-xl shadow-xl max-w-lg w-full relative transform transition-all duration-300 ease-out scale-95 opacity-0 modal-content">
-            <button id="closeModalBtn" class="absolute top-2 right-2 text-gray-500 hover:text-sockomo-red text-3xl font-bold leading-none focus:outline-none">&times;</button>
-            <h3 class="font-sockomo text-2xl text-sockomo-blue font-bold mb-4 text-center">How to Measure Your Foot</h3>
-            <img src="https://r2.flowith.net/files/o/1748053390105-Instruction_Icon_for_Childrens_Foot_Measuring_Ruler_index_0@1024x1024.png" alt="Foot measurement instructions visual guide" class="w-full h-auto rounded-lg mb-4 border border-gray-200">
-            <p class="font-clean text-gray-700 text-sm leading-relaxed">
-                Place the GiraPaws ruler (included with your socks!) on a flat floor. Have your child stand with their heel carefully aligned with the 'Start' line on the ruler. Note the measurement in centimeters (cm) at their longest toe. That's the number to enter!
-            </p>
-        </div>
-    </div>
-
 
     <script src="data.js"></script>
     <script src="app.js"></script>

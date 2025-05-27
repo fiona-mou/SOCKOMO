@@ -32,54 +32,23 @@ class SockomoGiraffeApp {
         
         // Loading elements
         this.loadingSpinner = document.getElementById('loadingSpinner');
-
-        // Modal elements for "How to measure?"
-        this.howToMeasureLink = document.getElementById('howToMeasureLink');
-        this.measurementModal = document.getElementById('measurementModal');
-        this.closeModalBtn = document.getElementById('closeModalBtn');
-        this.modalContent = this.measurementModal ? this.measurementModal.querySelector('.modal-content') : null;
     }
 
     /**
      * Bind event listeners
      */
     bindEvents() {
-        if (this.findStageBtn) {
-            this.findStageBtn.addEventListener('click', () => this.handleFindStage());
-        }
-        if (this.tryAgainBtn) {
-            this.tryAgainBtn.addEventListener('click', () => this.handleTryAgain());
-        }
-        if (this.footLengthInput) {
-            this.footLengthInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    this.handleFindStage();
-                }
-            });
-            this.footLengthInput.addEventListener('input', () => {
-                this.hideError();
-            });
-        }
-        
-        // Modal events
-        if (this.howToMeasureLink) {
-            this.howToMeasureLink.addEventListener('click', () => this.showMeasurementModal());
-        }
-        if (this.closeModalBtn) {
-            this.closeModalBtn.addEventListener('click', () => this.hideMeasurementModal());
-        }
-        if (this.measurementModal) {
-            this.measurementModal.addEventListener('click', (event) => {
-                if (event.target === this.measurementModal) { // Click outside modal content
-                    this.hideMeasurementModal();
-                }
-            });
-        }
-        // Close modal with Escape key
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && !this.measurementModal.classList.contains('hidden')) {
-                this.hideMeasurementModal();
+        this.findStageBtn.addEventListener('click', () => this.handleFindStage());
+        this.tryAgainBtn.addEventListener('click', () => this.handleTryAgain());
+        this.footLengthInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.handleFindStage();
             }
+        });
+        
+        // Clear error message when user starts typing
+        this.footLengthInput.addEventListener('input', () => {
+            this.hideError();
         });
     }
 
@@ -93,10 +62,16 @@ class SockomoGiraffeApp {
             return;
         }
 
+        // Button click animation
+        this.findStageBtn.classList.add('animate-click-bounce');
+        setTimeout(() => {
+            this.findStageBtn.classList.remove('animate-click-bounce');
+        }, 300); // Duration of clickBounceEffect animation
+
         this.showLoading();
         
         // Simulate processing time for better UX
-        await new Promise(resolve => setTimeout(resolve, 800)); // Slightly reduced for snappiness
+        await new Promise(resolve => setTimeout(resolve, 800)); // Slightly shorter wait
         
         try {
             const giraffeStage = this.calculateGiraffeStage(footLength);
@@ -128,10 +103,11 @@ class SockomoGiraffeApp {
             return false;
         }
         
+        // Using precise boundaries from data.js
         if (footLength < 8.9 || footLength > 24.8) {
             this.showError(
                 'Hmm, that seems like a very tiny or very big foot for this ruler! ' +
-                'Please check the measurement (8.9cm to 24.8cm) and try again.'
+                'Please measure between 8.9 cm and 24.8 cm.'
             );
             return false;
         }
@@ -140,15 +116,13 @@ class SockomoGiraffeApp {
     }
 
     /**
-     * Calculate giraffe stage based on foot length.
-     * The conditions are ordered from highest stage (Adult) to lowest (Newborn).
-     * This ensures that if a foot length falls on a boundary shared by two stages,
-     * it is assigned to the "higher" (older/larger) stage, as per requirements.
-     * For example, a footLength of 12.1 cm will be classified as Juvenile, not Newborn.
+     * Calculate giraffe stage based on foot length
+     * Uses the mapping logic from the consolidated data.
+     * The order of conditions handles overlaps by prioritizing stages listed earlier.
      */
     calculateGiraffeStage(footLength) {
-        if (footLength >= 17.1 && footLength <= 24.8) {
-            return GIRAFFE_STAGES.adult;
+        if (footLength >= 17.1) {
+        return GIRAFFE_STAGES.adult;
         } else if (footLength >= 15.6 && footLength <= 19.2) {
             return GIRAFFE_STAGES.subadult;
         } else if (footLength >= 12.1 && footLength <= 16.5) {
@@ -157,9 +131,9 @@ class SockomoGiraffeApp {
             return GIRAFFE_STAGES.newborn;
         } else {
             // This case should ideally be caught by validateInput, but as a fallback:
-            console.warn(`Foot length ${footLength}cm is outside predefined GIRAFFE_STAGES ranges after validation. Review ranges.`);
-            this.showError('Could not determine a giraffe stage for this length. Please try a value between 8.9cm and 24.8cm.');
-            throw new Error('Foot length outside explicitly mapped GIRAFFE_STAGES ranges.');
+            console.warn('Foot length passed validation but not caught by stage logic:', footLength);
+            this.showError('Could not determine giraffe stage. Please try a valid measurement.');
+            throw new Error('Foot length outside expected range after validation.');
         }
     }
 
@@ -167,22 +141,28 @@ class SockomoGiraffeApp {
      * Display the results to the user
      */
     displayResults(giraffeStage) {
+        // Update stage information
         this.stageTitle.textContent = `You're like a ${giraffeStage.name} Giraffe!`;
         this.ageRange.textContent = `Children around ${giraffeStage.childAgeRange} typically have this foot size`;
         this.stageName.textContent = giraffeStage.name;
         
+        // Update giraffe image and trigger animation
         this.giraffeImage.src = giraffeStage.imageUrl;
         this.giraffeImage.alt = `${giraffeStage.name} Giraffe`;
-        // Trigger giraffe image animation
-        this.giraffeImage.classList.remove('giraffe-image-enter');
-        void this.giraffeImage.offsetWidth; // Reflow to restart animation
-        this.giraffeImage.classList.add('giraffe-image-enter');
+        // Re-trigger animation if element is re-displayed
+        this.giraffeImage.classList.remove('animate-giraffe-appear');
+        void this.giraffeImage.offsetWidth; // Force reflow to restart animation
+        this.giraffeImage.classList.add('animate-giraffe-appear');
         
+        // Update characteristics
         this.height.textContent = `${giraffeStage.height.metric} (${giraffeStage.height.imperial})`;
         this.weight.textContent = `${giraffeStage.weight.metric} (${giraffeStage.weight.imperial})`;
         
+        // Update fun facts
         this.displayFunFacts(giraffeStage.funFacts);
-        this.showResultsSection();
+        
+        // Show results with animation
+        this.showResults();
     }
 
     /**
@@ -190,12 +170,14 @@ class SockomoGiraffeApp {
      */
     displayFunFacts(funFacts) {
         this.funFacts.innerHTML = ''; // Clear previous facts
+        
         funFacts.forEach(fact => {
             const factElement = document.createElement('div');
-            factElement.className = 'bg-white p-3 rounded-lg border-l-4 border-sockomo-orange shadow-sm opacity-0'; // opacity-0 for animation
+            // Tailwind classes ensure consistency with styles.css fadeInUp which applies to #funFacts > div
+            factElement.className = 'bg-white p-3 rounded-lg border-l-4 border-sockomo-orange shadow-sm';
             factElement.innerHTML = `
                 <p class="font-clean text-gray-700 leading-relaxed">
-                    <span class="text-sockomo-orange text-lg">🌟</span> ${fact}
+                    <span class="text-sockomo-orange font-bold">🌟</span> ${fact}
                 </p>
             `;
             this.funFacts.appendChild(factElement);
@@ -203,33 +185,51 @@ class SockomoGiraffeApp {
     }
 
     /**
-     * Show results section with CSS animation
+     * Show results section with smooth transition
      */
-    showResultsSection() {
+    showResults() {
         this.inputSection.style.display = 'none';
         this.outputSection.classList.remove('hidden');
-        this.outputSection.classList.add('animate-fadeInUp');
+        this.outputSection.style.opacity = '0';
+        this.outputSection.style.transform = 'translateY(20px)';
         
-        this.outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Smooth transition for the whole output section
+        requestAnimationFrame(() => { // Ensures styles are applied before transition starts
+            this.outputSection.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            this.outputSection.style.opacity = '1';
+            this.outputSection.style.transform = 'translateY(0)';
+        });
+        
+        // Scroll to results
+        // Ensure scrolling happens after the element is fully visible and transition starts
+        setTimeout(() => {
+            this.outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100); 
     }
 
     /**
      * Handle "Try Again" button click
      */
     handleTryAgain() {
+        // Reset input
         this.footLengthInput.value = '';
         this.hideError();
         
+        // Show input section
         this.outputSection.classList.add('hidden');
-        this.outputSection.classList.remove('animate-fadeInUp'); // Reset animation class
-        this.giraffeImage.classList.remove('giraffe-image-enter'); // Reset image animation
-
+        // Reset output section styles for next appearance
+        this.outputSection.style.opacity = '0';
+        this.outputSection.style.transform = 'translateY(20px)';
+        
         this.inputSection.style.display = 'block';
+        
+        // Scroll to input section
         this.inputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         
+        // Focus on input field
         setTimeout(() => {
             this.footLengthInput.focus();
-        }, 300); // Reduced delay
+        }, 500); // Delay to ensure scroll is complete
     }
 
     /**
@@ -238,11 +238,10 @@ class SockomoGiraffeApp {
     showError(message) {
         this.errorMessage.textContent = message;
         this.errorMessage.classList.remove('hidden');
-        this.errorMessage.style.animation = 'shake 0.4s ease-in-out'; // Slightly faster shake
-        
-        setTimeout(() => {
-            this.errorMessage.style.animation = '';
-        }, 400);
+        // Use Tailwind animation class
+        this.errorMessage.classList.remove('animate-shake-error');
+        void this.errorMessage.offsetWidth; // Reflow
+        this.errorMessage.classList.add('animate-shake-error');
     }
 
     /**
@@ -250,6 +249,7 @@ class SockomoGiraffeApp {
      */
     hideError() {
         this.errorMessage.classList.add('hidden');
+        this.errorMessage.classList.remove('animate-shake-error');
     }
 
     /**
@@ -257,7 +257,6 @@ class SockomoGiraffeApp {
      */
     showLoading() {
         this.loadingSpinner.classList.remove('hidden');
-        this.loadingSpinner.classList.add('flex'); // Ensure it's flex for centering
     }
 
     /**
@@ -265,36 +264,6 @@ class SockomoGiraffeApp {
      */
     hideLoading() {
         this.loadingSpinner.classList.add('hidden');
-        this.loadingSpinner.classList.remove('flex');
-    }
-
-    /**
-     * Show measurement instruction modal
-     */
-    showMeasurementModal() {
-        if (!this.measurementModal || !this.modalContent) return;
-        this.measurementModal.classList.remove('hidden');
-        this.measurementModal.classList.add('flex'); // Make modal visible
-        // Trigger transition
-        setTimeout(() => {
-            this.measurementModal.style.opacity = '1';
-            this.modalContent.style.opacity = '1';
-            this.modalContent.style.transform = 'scale(1)';
-        }, 10); // Short delay for transition
-    }
-
-    /**
-     * Hide measurement instruction modal
-     */
-    hideMeasurementModal() {
-        if (!this.measurementModal || !this.modalContent) return;
-        this.measurementModal.style.opacity = '0';
-        this.modalContent.style.opacity = '0';
-        this.modalContent.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            this.measurementModal.classList.add('hidden');
-            this.measurementModal.classList.remove('flex');
-        }, 300); // Match CSS transition duration
     }
 }
 
@@ -302,5 +271,3 @@ class SockomoGiraffeApp {
 document.addEventListener('DOMContentLoaded', () => {
     new SockomoGiraffeApp();
 });
-
-

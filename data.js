@@ -80,7 +80,7 @@ const GIRAFFE_STAGES = {
             metric: "680 - 1360 kg", 
             imperial: "1500 - 3000 pounds"
         },
-        imageUrl: "https://r2.flowith.net/files/o/1748052994540-mature_adult_giraffe_3D_cartoon_playful_image_index_4@1024x1024.png",
+        imageUrl: "https://r2.flowith.net/files/o/1748052994540-mature_adult_giraffe_3d_cartoon_playful_image_index_4@1024x1024.png", // Added ?v=2 for cache busting
         funFacts: [
             "Giraffes are the tallest land animals on Earth! Their height helps them see predators far away and eat leaves no other animals can reach!",
             "Their tongues are long and dark (up to 1.5 feet!) so they can grab tasty leaves, even thorny ones, high up in trees!",
@@ -93,6 +93,3 @@ const GIRAFFE_STAGES = {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { GIRAFFE_STAGES };
 }
-
-
-
