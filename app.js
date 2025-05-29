@@ -32,6 +32,12 @@ class SockomoGiraffeApp {
         
         // Loading elements
         this.loadingSpinner = document.getElementById('loadingSpinner');
+   // Modal elements for "How to measure?"
+        this.howToMeasureLink = document.getElementById('howToMeasureLink');
+        this.measurementModal = document.getElementById('measurementModal');
+        this.closeModalBtn = document.getElementById('closeModalBtn');
+        this.modalContent = this.measurementModal ? this.measurementModal.querySelector('.modal-content') : null;
+    
     }
 
     /**
@@ -45,7 +51,25 @@ class SockomoGiraffeApp {
                 this.handleFindStage();
             }
         });
-        
+        if (this.howToMeasureLink) {
+            this.howToMeasureLink.addEventListener('click', () => this.showMeasurementModal());
+        }
+        if (this.closeModalBtn) {
+            this.closeModalBtn.addEventListener('click', () => this.hideMeasurementModal());
+        }
+        if (this.measurementModal) {
+            this.measurementModal.addEventListener('click', (event) => {
+                if (event.target === this.measurementModal) {
+                this.hideMeasurementModal();
+                }
+            });
+        }
+        document.addEventListener('keydown', (event) => {
+             if (event.key === 'Escape' && !this.measurementModal.classList.contains('hidden')) {
+                 this.hideMeasurementModal();
+             }
+        });
+
         // Clear error message when user starts typing
         this.footLengthInput.addEventListener('input', () => {
             this.hideError();
@@ -259,14 +283,42 @@ class SockomoGiraffeApp {
         this.loadingSpinner.classList.remove('hidden');
     }
 
-    /**
+   /**
      * Hide loading spinner
      */
     hideLoading() {
         this.loadingSpinner.classList.add('hidden');
     }
-}
 
+    /**
+     * Show measurement instruction modal
+     */
+    showMeasurementModal() {
+        if (!this.measurementModal || !this.modalContent) return;
+        this.measurementModal.classList.remove('hidden');
+        this.measurementModal.classList.add('flex'); // Make modal visible
+        // Trigger transition
+        setTimeout(() => {
+            this.measurementModal.style.opacity = '1';
+            this.modalContent.style.opacity = '1';
+            this.modalContent.style.transform = 'scale(1)';
+        }, 10); // Short delay for transition
+    }
+
+    /**
+     * Hide measurement instruction modal
+     */
+    hideMeasurementModal() {
+        if (!this.measurementModal || !this.modalContent) return;
+        this.measurementModal.style.opacity = '0';
+        this.modalContent.style.opacity = '0';
+        this.modalContent.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.measurementModal.classList.add('hidden');
+            this.measurementModal.classList.remove('flex');
+        }, 300); // Match CSS transition duration
+    }
+}
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new SockomoGiraffeApp();
